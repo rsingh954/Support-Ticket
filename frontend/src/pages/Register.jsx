@@ -1,7 +1,10 @@
 /* eslint-disable no-unused-vars */
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { toast } from "react-toastify";
 import { FaUser } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
+import { register, reset } from "../features/auth/authSlice";
 function Register() {
   const [formData, setFormData] = useState({
     name: "",
@@ -10,6 +13,21 @@ function Register() {
     password2: "",
   });
   const { name, email, password, password2 } = formData;
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const { user, isLoading, isError, isSuccess, message } = useSelector(
+    (state) => state.random //test
+  );
+  useEffect(() => {
+    if (isError) {
+      toast.error(message);
+    }
+    //redirect if logged in
+    if (isSuccess || user) {
+      navigate("/");
+    }
+    dispatch(reset());
+  }, [message, dispatch, user, isError, isLoading, isSuccess, navigate]);
 
   function onChange(e) {
     setFormData((prevState) => ({
@@ -19,15 +37,22 @@ function Register() {
   }
   function onSubmit(e) {
     e.preventDefault();
-    if (password !== password2) {
+    if (password[0] !== password2[0]) {
       toast.error("Passwords do not match");
+    } else {
+      const userData = {
+        name,
+        email,
+        password,
+      };
+      dispatch(register(userData));
     }
   }
   return (
     <>
       <section className="heading">
         <h1>
-          <FaUser /> Register
+          <FaUser /> Register {user}
         </h1>
         <p>Please create an account</p>
       </section>

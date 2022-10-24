@@ -1,14 +1,21 @@
 /* eslint-disable no-unused-vars */
 import { useState } from "react";
 import { toast } from "react-toastify";
+import { useSelector, useDispatch } from "react-redux";
 import { FaSignInAlt } from "react-icons/fa";
+import { login } from "../features/auth/authSlice";
+
 function Login() {
   const [formData, setFormData] = useState({
     email: "",
     password: "",
   });
   const { email, password } = formData;
+  const dispatch = useDispatch();
 
+  const { user, isLoading, isSuccess, message } = useSelector(
+    (state) => state.auth
+  );
   function onChange(e) {
     setFormData((prevState) => ({
       ...prevState,
@@ -17,6 +24,11 @@ function Login() {
   }
   function onSubmit(e) {
     e.preventDefault();
+    const userData = {
+      email,
+      password,
+    };
+    dispatch(login(userData));
   }
   return (
     <>
