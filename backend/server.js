@@ -7,7 +7,7 @@ const PORT = process.env.PORT || 8000;
 const app = express()
 
 const userRoutes = require('./routes/userRoutes')
-
+const ticketRoutes = require('./routes/ticketRoutes')
 //connect to db
 connectDB()
 
@@ -21,6 +21,8 @@ app.get('/', (req, res) => {
 })
 //Routes
 app.use('/api/users', userRoutes)
+app.use('/api/tickets', ticketRoutes)
+
 
 
 app.use(errorHandler)

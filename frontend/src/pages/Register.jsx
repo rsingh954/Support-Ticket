@@ -5,6 +5,7 @@ import { FaUser } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { register, reset } from "../features/auth/authSlice";
+import Spinner from "../components/Spinner";
 function Register() {
   const [formData, setFormData] = useState({
     name: "",
@@ -16,7 +17,7 @@ function Register() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { user, isLoading, isError, isSuccess, message } = useSelector(
-    (state) => state.random //test
+    (state) => state.auth //store -> auth: authReducer
   );
   useEffect(() => {
     if (isError) {
@@ -32,7 +33,7 @@ function Register() {
   function onChange(e) {
     setFormData((prevState) => ({
       ...prevState,
-      [e.target.name]: [e.target.value],
+      [e.target.name]: e.target.value,
     }));
   }
   function onSubmit(e) {
@@ -48,11 +49,14 @@ function Register() {
       dispatch(register(userData));
     }
   }
+  if(isLoading){
+    return <Spinner />
+  }
   return (
     <>
       <section className="heading">
         <h1>
-          <FaUser /> Register {user}
+          <FaUser /> Register
         </h1>
         <p>Please create an account</p>
       </section>

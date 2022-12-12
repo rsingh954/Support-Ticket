@@ -2,7 +2,6 @@ const asyncHandler = require('express-async-handler')
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
 const User = require('../models/userModel')
-const { generateKey } = require('crypto')
 /*
 @desc Register a new user
 @route /api/users
@@ -23,7 +22,7 @@ const registerUser = asyncHandler( async (req, res) => {
     }
 
     //Hash
-    const salt = await bcrypt.genSalt(12)
+    const salt = await bcrypt.genSalt(10)
     const hashedPassword = await bcrypt.hash(password, salt)
 
     //Create User 
@@ -55,7 +54,6 @@ const registerUser = asyncHandler( async (req, res) => {
 const loginUser = asyncHandler(async (req, res) => {
     const { email, password } = req.body
     const user = await User.findOne({email})
-
     //check if user and password match
     if(user && (await bcrypt.compare(password, user.password))){
         res.status(201).json({
